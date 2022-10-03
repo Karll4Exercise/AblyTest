@@ -40,7 +40,7 @@ class MemberService:
         member_serializer = MemberSerializer(data={
             'email': email,
             'nickname': nickname,
-            'password': password,
+            'password': self._get_hash_text(password),
             'name': name,
             'phone': phone,
         })
@@ -76,7 +76,7 @@ class MemberService:
         members = MemberSerializer(queryset, many=True)
         member = Member.objects.get(pk=members.data[0].get('id'))
 
-        if member.password != password:
+        if member.password != self._get_hash_text(password):
             raise exceptions.ValidationError('비밀번호를 잘못 입력하였습니다.')
 
         new_token = self._get_token(member)
@@ -135,7 +135,7 @@ class MemberService:
             raise exceptions.ValidationError('잘못된 인증정보.')
 
         member = Member.objects.get(pk=member_pk)
-        member.password = password
+        member.password = self._get_hash_text(password)
         member.save()
 
     def _get_token(self, member: Member) -> str:
@@ -149,3 +149,6 @@ class MemberService:
 
         queryset = Member.objects.filter(Q(email=email) | Q(phone=phone))
         return len(queryset) > 0
+
+    def _get_hash_text(self, text: str) -> str:
+        return hashlib.md5(text.encode()).hexdigest()

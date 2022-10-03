@@ -8,11 +8,11 @@ Content-Type: application/json
 }
 
 ### 전환번호 인증
-PUT http://127.0.0.1:8000/mobileauth/1/certified/
+PUT http://127.0.0.1:8000/mobileauth/3/certified/
 Content-Type: application/json
 
 {
-  "authorization_number": "9141"
+  "authorization_number": "2212"
 }
 
 ### 회원가입
@@ -20,7 +20,7 @@ POST http://127.0.0.1:8000/members/
 Content-Type: application/json
 
 {
-  "mobileAuthId": 1,
+  "mobileAuthId": 4,
   "email": "test@test.com",
   "nickname": "test123",
   "password": "1234",
@@ -39,15 +39,15 @@ Content-Type: application/json
 }
 
 ### 정보 보기
-GET http://127.0.0.1:8000/members/1/
-A-Token: 06ffbd51d9b088ee65cbbff53ec9037d719557bf6b1636ea70b9c7ab397a91dc
+GET http://127.0.0.1:8000/members/3/
+A-Token: 43597c32dbaec99bdf8e1fe69ab75391bddd7a1d1747ca1e227fdf93f408273a
 
 ### 비밀번호 재설정
-PUT http://127.0.0.1:8000/members/1/password-reset/
+PUT http://127.0.0.1:8000/members/3/password-reset/
 Content-Type: application/json
 
 {
-  "mobileAuthId": 1,
+  "mobileAuthId": 2,
   "password": "5678",
   "phone": "010-0000-0000"
 }
