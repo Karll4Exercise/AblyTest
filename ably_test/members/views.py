@@ -62,6 +62,11 @@ class MemberViews(viewsets.GenericViewSet):
     )
     @transaction.atomic()
     def create(self, request, **kwargs):
+        """
+        회원 가입
+
+        회원 가입
+        """
         return Response({
             'Token': MemberService(request, kwargs).create(),
         })
@@ -116,6 +121,11 @@ class MemberViews(viewsets.GenericViewSet):
     @transaction.atomic()
     @action(detail=False, methods=['POST'], url_path='login')
     def login(self, request, **kwargs):
+        """
+        로그인
+
+        로그인
+        """
         return Response({
             'Token': MemberService(request, kwargs).login(),
         })

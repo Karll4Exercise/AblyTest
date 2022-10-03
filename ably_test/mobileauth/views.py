@@ -57,6 +57,11 @@ class MobileAuthViews(viewsets.GenericViewSet):
     )
     @transaction.atomic()
     def create(self, request, **kwargs):
+        """
+        모바일 인증 요청
+
+        모바일 인증 요청
+        """
         return Response({
             'mobileAuthId': MobileAuthService(request, kwargs).create(),
         })
@@ -103,5 +108,10 @@ class MobileAuthViews(viewsets.GenericViewSet):
     @action(detail=True, methods=['PUT'], url_path='certified')
     @transaction.atomic()
     def certified(self, request, **kwargs):
+        """
+        모바일 인증
+
+        모바일 인증
+        """
         MobileAuthService(request, kwargs).certified()
         return Response()
