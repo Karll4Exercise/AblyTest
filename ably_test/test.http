@@ -41,3 +41,15 @@ Content-Type: application/json
 ### 정보 보기
 GET http://127.0.0.1:8000/members/1/
 A-Token: 06ffbd51d9b088ee65cbbff53ec9037d719557bf6b1636ea70b9c7ab397a91dc
+
+### 비밀번호 재설정
+PUT http://127.0.0.1:8000/members/1/password-reset/
+Content-Type: application/json
+
+{
+  "mobileAuthId": 1,
+  "password": "5678",
+  "phone": "010-0000-0000"
+}
+
+

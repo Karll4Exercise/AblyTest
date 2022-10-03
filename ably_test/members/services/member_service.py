@@ -33,8 +33,9 @@ class MemberService:
         except ObjectDoesNotExist:
             raise exceptions.ValidationError('존재하지 않는 모바일 인증 아이디입니다.')
 
-        if not mobile_auth.certified:
+        if not mobile_auth.certified or mobile_auth.phone != phone:
             raise exceptions.ValidationError('모바일 미인증')
+        mobile_auth.delete()
 
         member_serializer = MemberSerializer(data={
             'email': email,
@@ -73,9 +74,6 @@ class MemberService:
             raise exceptions.ValidationError('일치하는 회원 정보가 없습니다.')
 
         members = MemberSerializer(queryset, many=True)
-        if len(members.data) > 1:
-            raise exceptions.ValidationError('비밀번호를 잘못 입력하였습니다.')
-
         member = Member.objects.get(pk=members.data[0].get('id'))
 
         if member.password != password:
@@ -108,6 +106,37 @@ class MemberService:
 
         return member_info
 
+    def password_reset(self) -> None:
+        mobile_auth_id = self.request.data.get('mobileAuthId')
+        password = self.request.data.get('password')
+        phone = self.request.data.get('phone')
+        pk = self.kwargs.get('pk')
+
+        if None in [mobile_auth_id, password, phone]:
+            raise exceptions.ValidationError('필수값 누락')
+
+        try:
+            mobile_auth = MobileAuth.objects.get(id=mobile_auth_id)
+        except ObjectDoesNotExist:
+            raise exceptions.ValidationError('존재하지 않는 모바일 인증 아이디입니다.')
+
+        if not mobile_auth.certified or mobile_auth.phone != phone:
+            raise exceptions.ValidationError('모바일 미인증')
+        mobile_auth.delete()
+
+        queryset = Member.objects.filter(Q(phone=phone))
+        if len(queryset) == 0:
+            raise exceptions.ValidationError('일치하는 회원 정보가 없습니다.')
+
+        members = MemberSerializer(queryset, many=True)
+        member_pk = members.data[0].get('id')
+
+        if member_pk != int(pk):
+            raise exceptions.ValidationError('잘못된 인증정보.')
+
+        member = Member.objects.get(pk=member_pk)
+        member.password = password
+        member.save()
 
     def _get_token(self, member: Member) -> str:
         now = datetime.datetime.now()

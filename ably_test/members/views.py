@@ -137,3 +137,51 @@ class MemberViews(viewsets.GenericViewSet):
         정보 보기
         """
         return Response(MemberService(request, kwargs).info())
+
+    @swagger_auto_schema(
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            required=['mobileAuthId', 'password', 'phone'],
+            properties={
+                'mobileAuthId': openapi.Schema(type=openapi.TYPE_INTEGER, description='모바일 인증 아이디'),
+                'password': openapi.Schema(type=openapi.TYPE_STRING, description='비밀번호'),
+                'phone': openapi.Schema(type=openapi.TYPE_STRING, description='전화번호'),
+            }
+        ),
+        responses={
+            200: openapi.Response(
+                description='비밀번호 재설정 완료',
+                schema=openapi.Schema(
+                    type=openapi.TYPE_OBJECT,
+                    properties={
+                        'meta': openapi.Schema(
+                            type=openapi.TYPE_OBJECT,
+                            properties={
+                                'code': openapi.Schema(type=openapi.TYPE_INTEGER, description='결과 코드')
+                            }
+                        ),
+                    }
+                )
+            ),
+            400: openapi.Response(
+                description='비밀번호 재설정 실패',
+                schema=openapi.Schema(
+                    type=openapi.TYPE_OBJECT,
+                    properties={
+                        'meta': openapi.Schema(
+                            type=openapi.TYPE_OBJECT,
+                            properties={
+                                'code': openapi.Schema(type=openapi.TYPE_INTEGER, description='결과 코드'),
+                                'message': openapi.Schema(type=openapi.TYPE_STRING, description='실패 사유')
+                            }
+                        ),
+                    }
+                )
+            )
+        },
+    )
+    @transaction.atomic()
+    @action(detail=True, methods=['PUT'], url_path='password-reset')
+    def password_reset(self, request, **kwargs):
+        MemberService(request, kwargs).password_reset()
+        return Response()
