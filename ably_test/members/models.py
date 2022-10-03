@@ -22,6 +22,12 @@ class MemberSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class MemberInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Member
+        fields = ['id', 'email', 'nickname', 'name', 'phone', 'regist_at']
+
+
 class Token(models.Model):
     id = models.BigAutoField(db_column='id', primary_key=True)
     member = models.ForeignKey(Member, models.DO_NOTHING)

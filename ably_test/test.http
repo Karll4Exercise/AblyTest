@@ -1,0 +1,43 @@
+### 전화번호 인증 요청
+POST http://127.0.0.1:8000/mobileauth/
+Content-Type: application/json
+
+{
+  "name": "테스터",
+  "phone": "010-0000-0000"
+}
+
+### 전환번호 인증
+PUT http://127.0.0.1:8000/mobileauth/1/certified/
+Content-Type: application/json
+
+{
+  "authorization_number": "9141"
+}
+
+### 회원가입
+POST http://127.0.0.1:8000/members/
+Content-Type: application/json
+
+{
+  "mobileAuthId": 1,
+  "email": "test@test.com",
+  "nickname": "test123",
+  "password": "1234",
+  "name": "테스터",
+  "phone": "010-0000-0000"
+}
+
+### 로그인
+POST http://127.0.0.1:8000/members/login/
+Content-Type: application/json
+
+{
+  "email": "test@test.com",
+  "password": "1234",
+  "phone": "010-0000-0000"
+}
+
+### 정보 보기
+GET http://127.0.0.1:8000/members/1/
+A-Token: 06ffbd51d9b088ee65cbbff53ec9037d719557bf6b1636ea70b9c7ab397a91dc

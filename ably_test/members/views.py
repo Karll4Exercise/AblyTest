@@ -129,3 +129,11 @@ class MemberViews(viewsets.GenericViewSet):
         return Response({
             'Token': MemberService(request, kwargs).login(),
         })
+
+    def retrieve(self, request, **kwargs):
+        """
+        정보 보기
+
+        정보 보기
+        """
+        return Response(MemberService(request, kwargs).info())

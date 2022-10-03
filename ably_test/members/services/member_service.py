@@ -3,7 +3,7 @@ import hashlib
 
 from django.core.exceptions import ObjectDoesNotExist
 
-from members.models import Member, MemberSerializer, TokenSerializer, Token
+from members.models import Member, MemberSerializer, TokenSerializer, Token, MemberInfoSerializer
 from django.db.models import Q
 from rest_framework import exceptions
 from mobileauth.models import MobileAuth
@@ -89,6 +89,25 @@ class MemberService:
         token.expired_at = datetime.datetime.now() + datetime.timedelta(minutes=5)
         token.save()
         return new_token
+
+    def info(self) -> dict:
+        pk = self.kwargs.get('pk')
+        try:
+            member = Member.objects.get(pk=pk)
+            member_info = MemberInfoSerializer(member).data
+        except ObjectDoesNotExist:
+            raise exceptions.ValidationError('존재하지 않는 회원')
+
+        queryset = Token.objects.filter(Q(member_id=member.id))
+        tokens = TokenSerializer(queryset, many=True).data
+        regist_token = Token.objects.get(pk=tokens[0].get('id')).token
+        token = self.request.META.get('HTTP_A_TOKEN')
+
+        if regist_token != token:
+            raise exceptions.AuthenticationFailed
+
+        return member_info
+
 
     def _get_token(self, member: Member) -> str:
         now = datetime.datetime.now()
