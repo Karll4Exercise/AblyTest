@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'drf_yasg',
     'rest_framework',
-    # 'members.apps.MembersConfig',
+    'members.apps.MembersConfig',
     'mobileauth.apps.MobileAuthConfig',
 ]
 
