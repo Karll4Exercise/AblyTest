@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'rest_framework',
     # 'members.apps.MembersConfig',
-    # 'mobileauth.apps.MobileAuthConfig',
+    'mobileauth.apps.MobileAuthConfig',
 ]
 
 MIDDLEWARE = [
